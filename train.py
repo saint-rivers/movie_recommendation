@@ -17,7 +17,7 @@ True)
 
 train_set = data.build_full_trainset()
 model.fit(train_set)
-joblib.dump(model, './save/recommender.pkl')
+joblib.dump(model, './save/item_based_recommender_knn.pkl')
 
 # print(n)
 # prediction = model.predict(1923.0, 8844.0)
