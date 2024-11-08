@@ -20,6 +20,7 @@ def spoken_languages_parser(data):
     
 def production_countries_parser(data):
     g = data.replace("'", "\"")
+    print(data)
     g = json.loads(g)
     if len(g) > 0:
         out = ""
@@ -49,8 +50,8 @@ def genre_parser(data):
 path = kagglehub.dataset_download("rounakbanik/the-movies-dataset")
 converters = {
     'genres': genre_parser, 
-    # 'production_countries': production_countries_parser, 
-    # 'spoken_languages': spoken_languages_parser
+    'production_countries': production_countries_parser, 
+    'spoken_languages': spoken_languages_parser
 }
 df = pd.read_csv(f"{path}/movies_metadata.csv", converters=converters)
 # print(os.listdir(path))

@@ -1,5 +1,7 @@
-save
+models
 __pycache__
 .vscode
 .conda
 data/
+nparray
+schema.sql
