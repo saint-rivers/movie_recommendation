@@ -8,7 +8,18 @@
 </head>
 
 <body>
-  <input type="text" placeholder="movie name">
+  <form method="GET"></form>
+  <form method="POST" onsubmit="fetchRecommendations">
+    <input name="" type="text" placeholder="movie name" id="movId">
+    <button>Find</button>
+  </form>
 </body>
+
+<script>
+  movieId = document.getElementById("movId")
+  function fetchRecommendations() {
+    fetch("http://localhost:5000/recommend?movie=" + movieId, { method: "post" })
+  }
+</script>
 
 </html>

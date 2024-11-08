@@ -17,8 +17,11 @@ True)
 
 train_set = data.build_full_trainset()
 model.fit(train_set)
-joblib.dump(model, './save/item_based_recommender_knn.pkl')
+# joblib.dump(model, './save/item_based_recommender_knn.pkl')
 
+import pickle
+with open('save/item_based_recommender_knn.pkl', 'wb') as f:
+    pickle.dump(model, f)
 # print(n)
 # prediction = model.predict(1923.0, 8844.0)
 # prediction.est

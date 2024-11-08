@@ -15,10 +15,12 @@ pandas==2.2.3
 python-dateutil==2.9.0.post0
 pytz==2024.2
 requests==2.32.3
+scikit-learn==1.5.2
 scikit-surprise==1.1.4
 scipy==1.14.1
 six==1.16.0
 surprise==0.1
+threadpoolctl==3.5.0
 tqdm==4.66.6
 tzdata==2024.2
 urllib3==2.2.3
