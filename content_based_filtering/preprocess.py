@@ -1,36 +1,72 @@
+import kagglehub
 import pandas as pd
-import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-from pathlib import Path
-root = Path(__file__).parent.parent
-
-# preprocess movie data
-# create a matrix of frequency-importance of words found in the overview
-df = pd.read_csv(f"{root}/data/movies.csv", low_memory=False)
-df['overview'] = df['overview'].fillna('')
-df['original_title'] = df['original_title'].str.lower()
-df = df.drop('Unnamed: 0', axis=1)
-
-df.to_csv("./data/movies_processed_stopwords.csv")
-
-# implement SVM
-# linear_kernel is the simplest SVM kernel
-def generate_overview_matrix():
-    tfidf = TfidfVectorizer(stop_words="english") #Frequency-Inverse Document Frequency
-    tfidf_matrix = tfidf.fit_transform(df['overview'].values.astype('U'))
-    cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
-    np.save("./nparray/overview_sim_matrix.npy", cosine_sim)
-
-def get_producers(x):
-    for i in x:
-        return i['production_companies']['name']
-    return np.nan
+import os
+import json
+import re
+import ast
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn import preprocessing
 
 
-def generate_feature_sim_matrix():
-    pass
+def parse_production_companies(x):
+    if type(x) != str:
+        return ""
+    pattern  = r"[^a-zA-Z0-9\s]"
+    try:
+        g = ast.literal_eval(x)
+        if len(g) <=0:
+            return "[]"
+        
+        out = ""
+        li = []
+        for i, x in enumerate(g):
+            name = x['name'].lower()
+            name = re.sub(pattern, "", name)
+            out += f"{name}"
+            li.append(f"{name}")
+            if i < len(g) - 1:
+                out += ","
+        payload = f"{out}"
+        return out
+    except:
+        return ""
+    
+    
+def genre_parser(data):
+    g = data.replace("'", "\"")
+    g = json.loads(g)
+    li = []
+    if len(g) > 0:
+        out = ""
+        for i, x in enumerate(g):
+            out += f"{x['name'].lower()}"
+            li.append(x['name'].lower())
+            if i < len(g) - 1:
+                out += ","
+        return out
+    else:
+        return ""
+
+
+def preprocess_production_companies(df: pd.DataFrame, col_name: str):
+    df = df.drop(df.loc[df['production_companies'] == "[]"].index)
+    df = df.drop(df.loc[df['production_companies'] == "False"].index)
+    df = df.dropna(subset=['production_companies'])
+    df.loc[df['production_companies'].isnull() == "[]"]
+    return df
+
+
+def load_data():
+    path = kagglehub.dataset_download("rounakbanik/the-movies-dataset")
+    return pd.read_csv(f"{path}/movies_metadata.csv", low_memory=False)
 
 
 if __name__ == "__main__":
-    generate_overview_matrix()
+    df = load_data()
+    df = df.drop(['production_countries', 'spoken_languages', 'belongs_to_collection', 'budget', 'poster_path', 'homepage', 'status', 'video', 'vote_count', 'vote_average'], axis=1)
+    df = preprocess_production_companies(df, 'production_companies')
+    df['production_companies'] = df['production_companies'].apply(parse_production_companies)
+    df['genres'] = df['genres'].apply(genre_parser)
+    df['overview'] = df['overview'].fillna('')
+    df['title'] = df['title'].str.lower()
+    df.to_csv("data/movies_processed_cleaned.csv")
