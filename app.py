@@ -7,7 +7,7 @@ import json
 model = None
 
 app = Flask(__name__)
-with open('save/item_based_recommender_knn.pkl', 'rb') as f:
+with open('item_based_filtering/models/item_based_recommender_knn.pkl', 'rb') as f:
     model = pickle.load(f)
     
 df = pd.read_csv("./data/movies.csv", low_memory=False)
@@ -36,6 +36,25 @@ def make_prediction():
     out = out[['adult', 'genres', 'original_language', 'original_title', 'overview', 'runtime', 'production_companies']]
     
     return jsonify({'payload': out.to_dict('records')})
+
+
+@app.route('/pages/recommend', methods=['GET'])  
+def recommend_page():  
+    if model == None:
+        return jsonify({'message':'model not loaded'})
+    
+    movie_id = request.args['movie']
+
+    test_movie_id = model.trainset.to_inner_iid(float(movie_id))
+    n = model.get_neighbors(test_movie_id, k =10)
+
+    ids = [model.trainset.to_raw_iid(mid) for mid in n]
+    indexes = df.index.isin(ids)
+    out = df[indexes]
+    out = out[['adult', 'genres', 'original_language', 'original_title', 'overview', 'runtime', 'production_companies']]
+    
+    # return jsonify({'payload': out.to_dict('records')})
+    return render_template('recommend.html', output=out.to_dict('records'))
 
 
 @app.route("/")                        
