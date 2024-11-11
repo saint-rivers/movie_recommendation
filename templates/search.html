@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}Recommendations{% endblock %}
-{% block header %}Recommendations{% endblock %}
+{% block title %}Search{% endblock %}
+{% block header %}Search{% endblock %}
 
 {% block content %}
 {% for movie in output %}
 <div>
   <h3>{{movie.original_title}}</h3>
+  <a href="recommend?movie={{movie.id}}">Find recommendations</a>
   <p>{{movie}}</p>
   <hr>
 </div>

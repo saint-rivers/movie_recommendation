@@ -1,25 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% block title %}Recommender{% endblock %}
+{% block header %}Recommender{% endblock %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recommender</title>
-</head>
-
+{% block content %}
 <body>
-  <form method="GET"></form>
-  <form method="POST" onsubmit="fetchRecommendations">
-    <input name="" type="text" placeholder="movie name" id="movId">
-    <button>Find</button>
+  <form action="pages/search">
+    <label for="title"></label>
+    <input id="title" name="title" type="text" placeholder="movie title">
+    <input type="submit" value="Search">
   </form>
 </body>
-
-<script>
-  movieId = document.getElementById("movId")
-  function fetchRecommendations() {
-    fetch("http://localhost:5000/recommend?movie=" + movieId, { method: "post" })
-  }
-</script>
-
-</html>
+{% endblock %}
