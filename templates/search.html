@@ -6,7 +6,7 @@
 {% for movie in output %}
 <div>
   <h3>{{movie.original_title}}</h3>
-  <a href="recommend?movie={{movie.id}}">Find recommendations</a>
+  <a href="recommend?movie={{movie.id}}&model=collab">Find recommendations</a>
   <p>{{movie}}</p>
   <hr>
 </div>

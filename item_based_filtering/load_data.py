@@ -2,11 +2,12 @@ import pandas as pd
 from surprise import Dataset
 from surprise import Reader
 import joblib
+import kagglehub
 
-df = pd.read_csv("./data/ratings_matrix.csv")
+df = pd.read_csv(f"data/item_ratings.csv")
 
 # This is the same data that was plotted for similarity earlier
-# with one new user "E" who has rated only movie 1
+# with one new user "E" who has rated only movie 1``
 ratings_dict = {
     "item": df['movieId'],
     "user": df['userId'],
@@ -19,6 +20,6 @@ reader = Reader(rating_scale=(0, 5))
 # Loads Pandas dataframe
 data = Dataset.load_from_df(df[["user", "item", "rating"]], reader)
 # Loads the builtin Movielens-100k data
-movielens = Dataset.load_builtin('ml-100k')
+# movielens = Dataset.load_builtin('ml-100k')
 
 
