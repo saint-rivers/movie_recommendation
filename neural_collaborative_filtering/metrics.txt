@@ -1,0 +1,3 @@
+{"loss": 7.55628776550293, "accuracy": 0.03495531156659126, "f1-score": 31.792287826538086, "precision": 31.59307289123535, "recall": 31.999866485595703}
+
+recall_m: 63.9999 - val_acc: 0.0348 - val_f1_m: 63.5821 - val_loss: 7.5583 - val_precision_m: 63.1759 - val_recall_m: 63.9980
