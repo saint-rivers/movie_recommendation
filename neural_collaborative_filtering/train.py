@@ -56,7 +56,7 @@ class NeuralCF:
         X_train = [X_train[:, 0], X_train[:, 1]]
         y_train = np.array(y_train)
         model = self._build_model()
-        model.compile(optimizer=Adam(learning_rate=self.learning_rate), loss='mean_squared_error', metrics=['acc',f1_m,precision_m, recall_m])
+        model.compile(optimizer=Adam(learning_rate=self.learning_rate), loss=['mean_squared_error', 'root_mean_squared_error'], metrics=['acc',f1_m,precision_m, recall_m])
         history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=validation_split)
         print(f'\n\n##### printing history #####\n')
         print(history)
